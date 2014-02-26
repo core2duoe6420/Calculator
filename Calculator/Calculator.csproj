@@ -43,17 +43,18 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BigIntegerCalculate.cs" />
     <Compile Include="Core\Calculate.cs" />
+    <Compile Include="Core\CalculateFactory.cs" />
     <Compile Include="Core\Element.cs" />
     <Compile Include="Core\Function.cs" />
-    <Compile Include="Core\NormalCalculate.cs" />
+    <Compile Include="Core\IPostFixComputor.cs" />
+    <Compile Include="Core\IParser.cs" />
     <Compile Include="Core\Operand.cs" />
     <Compile Include="Core\OperandBigInteger.cs" />
     <Compile Include="Core\OperandDouble.cs" />
     <Compile Include="Core\Operator.cs" />
-    <Compile Include="Core\OperandFactory.cs" />
     <Compile Include="Core\Selector.cs" />
+    <Compile Include="Core\SelectorCollection.cs" />
     <Compile Include="Forms\CalStoreMenu.cs">
       <SubType>UserControl</SubType>
     </Compile>

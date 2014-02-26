@@ -154,7 +154,7 @@ namespace Net.AlexKing.Calculator.Test
         }
 
         private void testExpression(string exp, double value) {
-            Calculate cal = new NormalCalculate(exp);
+            Calculate cal = new Calculate(exp);
             Assert.AreEqual(cal.DoCalculation().ToString(), value.ToString());
         }
     }

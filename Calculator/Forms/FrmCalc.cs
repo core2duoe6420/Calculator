@@ -11,7 +11,8 @@ namespace Net.AlexKing.Calculator.Forms
         private bool needToClear = false;
         private bool isInv = false;
         private static bool bigNumberSupport = false;
-
+        private static DefaultCalculateFactory normalFactory = new DefaultCalculateFactory();
+        private static BigNumberCalculateFactory bigNumberFactory = new BigNumberCalculateFactory();
         public static bool BigNumberSupport {
             get { return bigNumberSupport; }
         }
@@ -44,17 +45,17 @@ namespace Net.AlexKing.Calculator.Forms
             rMenu.btnJ.Click += new System.EventHandler(this.rMenu_click);
             rMenu.BringToFront();
 
-            Selector operandSelector = NormalCalculate.GetConstantSelector();
-            operandSelector.AddValue("Ra", OperandFactory.GetNewOperand(Settings.Default.Ra));
-            operandSelector.AddValue("Rb", OperandFactory.GetNewOperand(Settings.Default.Rb));
-            operandSelector.AddValue("Rc", OperandFactory.GetNewOperand(Settings.Default.Rc));
-            operandSelector.AddValue("Rd", OperandFactory.GetNewOperand(Settings.Default.Rd));
-            operandSelector.AddValue("Re", OperandFactory.GetNewOperand(Settings.Default.Re));
-            operandSelector.AddValue("Rf", OperandFactory.GetNewOperand(Settings.Default.Rf));
-            operandSelector.AddValue("Rg", OperandFactory.GetNewOperand(Settings.Default.Rg));
-            operandSelector.AddValue("Rh", OperandFactory.GetNewOperand(Settings.Default.Rh));
-            operandSelector.AddValue("Ri", OperandFactory.GetNewOperand(Settings.Default.Ri));
-            operandSelector.AddValue("Rj", OperandFactory.GetNewOperand(Settings.Default.Rj));
+            Selector operandSelector = new DefaultSelectorCollection(normalFactory).GetSelector("Constant");
+            operandSelector.AddValue("Ra", normalFactory.GetOperand(Settings.Default.Ra));
+            operandSelector.AddValue("Rb", normalFactory.GetOperand(Settings.Default.Rb));
+            operandSelector.AddValue("Rc", normalFactory.GetOperand(Settings.Default.Rc));
+            operandSelector.AddValue("Rd", normalFactory.GetOperand(Settings.Default.Rd));
+            operandSelector.AddValue("Re", normalFactory.GetOperand(Settings.Default.Re));
+            operandSelector.AddValue("Rf", normalFactory.GetOperand(Settings.Default.Rf));
+            operandSelector.AddValue("Rg", normalFactory.GetOperand(Settings.Default.Rg));
+            operandSelector.AddValue("Rh", normalFactory.GetOperand(Settings.Default.Rh));
+            operandSelector.AddValue("Ri", normalFactory.GetOperand(Settings.Default.Ri));
+            operandSelector.AddValue("Rj", normalFactory.GetOperand(Settings.Default.Rj));
 
             rMenu.tt.SetToolTip(rMenu.btnA, Settings.Default.Ra.ToString());
             rMenu.tt.SetToolTip(rMenu.btnB, Settings.Default.Rb.ToString());
@@ -74,8 +75,8 @@ namespace Net.AlexKing.Calculator.Forms
                 if (txtExpression.Text != "") {
                     try {
                         double value = Convert.ToDouble(txtExpression.Text);
-                        Selector operandSelector = NormalCalculate.GetConstantSelector();
-                        operandSelector.AddValue(key, OperandFactory.GetNewOperand(value));
+                        Selector operandSelector = new DefaultSelectorCollection(normalFactory).GetSelector("Constant");
+                        operandSelector.AddValue(key, normalFactory.GetOperand(value));
                         switch (key[1]) {
                             case 'a': Settings.Default.Ra = value; break;
                             case 'b': Settings.Default.Rb = value; break;
@@ -151,16 +152,17 @@ namespace Net.AlexKing.Calculator.Forms
                     string str = txtExpression.Text;
 
                     if (str.Contains("=")) {
-                        Function newFunc = Function.AddFunction(str);
+                        Function newFunc = new Function(str);
+                        newFunc.Add();
                         addMenuFunction(newFunc, txtExpression.Text);
                         txtExpression.Text = "";
                         FrmHistory.strH += str + "\n";
                     } else {
                         Calculate calculator;
                         if (bigNumberSupport == false)
-                            calculator = new NormalCalculate(str);
+                            calculator = new Calculate(normalFactory, str);
                         else
-                            calculator = new BigIntegerCalculate(str);
+                            calculator = new Calculate(bigNumberFactory, str);
                         Operand result = calculator.DoCalculation();
                         //向历史记录窗口添加内容
                         FrmHistory.strH += str + " = " + result.ToString() + "\n";

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Net.AlexKing.Calculator.Core
 {
-    public sealed class Function : NormalCalculate
+    public sealed class Function : Calculate
     {
         private string funcName;
         private string[] parameters;
@@ -38,15 +38,15 @@ namespace Net.AlexKing.Calculator.Core
             string funParameter = funcDefine.Substring(leftBracketsIndex + 1, funcDefine.Length - funcName.Length - 2);
             parameters = funParameter.Split(',');
             Selector paraSelector = new Selector();
-            Selector operatorSelector = GetOperatorSelector();
+            Selector operatorSelector = selectors.GetSelector("Operator");
             foreach (string parameter in parameters) {
                 if (!isStringAllCharacter(parameter))
                     throw new FormatException("Function parameter wrong");
                 if (operatorSelector.HasValue(parameter))
                     throw new FormatException("Function parameter conflicts with an existed function");
-                paraSelector.AddValue(parameter, OperandFactory.GetNewOperand(parameter));
+                paraSelector.AddValue(parameter, factory.GetOperand(parameter));
             }
-            base.addSelector(paraSelector);
+            selectors.AddSelector(paraSelector);
         }
 
         private bool isStringAllCharacter(string str) {
@@ -54,7 +54,6 @@ namespace Net.AlexKing.Calculator.Core
         }
 
         public Operand DoCalculation(List<Operand> operands) {
-            List<Element> postfix = this.Postfix;
             //函数计算时将每一个参数替换为对应的值
             for (int i = operands.Count - 1; i >= 0; i--) {
                 string parameter = parameters[operands.Count - 1 - i];
@@ -70,15 +69,12 @@ namespace Net.AlexKing.Calculator.Core
             }
             return base.DoCalculation();
         }
-
-        public static Function AddFunction(string funcStr) {
-            Function func = new Function(funcStr);
+        public void Add() {
             Operator newOperator = new Operator(OperatorPriority.functionLevel, OperatorType.function,
-                func.ParameterCount, func.FuncName, delegate(List<Operand> operands) {
-                return func.DoCalculation(operands);
+                ParameterCount, FuncName, delegate(List<Operand> operands) {
+                return DoCalculation(operands);
             });
-            NormalCalculate.GetOperatorSelector().AddValue(newOperator);
-            return func;
+            selectors.GetSelector("Operator").AddValue(newOperator);
         }
     }
 }
