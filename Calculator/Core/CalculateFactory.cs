@@ -21,9 +21,9 @@ namespace Net.AlexKing.Calculator.Core
 
         public override Operand GetOperand(Object obj) {
             if (obj is Double)
-                return new OperandDouble((double)obj);
+                return new DefaultOperand((double)obj);
             if (obj is string)
-                return new OperandDouble((string)obj);
+                return new DefaultOperand((string)obj);
             return null;
         }
 
@@ -44,7 +44,7 @@ namespace Net.AlexKing.Calculator.Core
 
         public override Operand GetOperand(Object obj) {
             if (obj is string)
-                return new OperandBigInteger((string)obj);
+                return new BigIntegerOperand((string)obj);
             return null;
         }
 

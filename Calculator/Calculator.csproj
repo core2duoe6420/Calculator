@@ -50,8 +50,6 @@
     <Compile Include="Core\IPostFixComputor.cs" />
     <Compile Include="Core\IParser.cs" />
     <Compile Include="Core\Operand.cs" />
-    <Compile Include="Core\OperandBigInteger.cs" />
-    <Compile Include="Core\OperandDouble.cs" />
     <Compile Include="Core\Operator.cs" />
     <Compile Include="Core\Selector.cs" />
     <Compile Include="Core\SelectorCollection.cs" />
