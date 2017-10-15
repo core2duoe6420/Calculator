@@ -1,7 +1,9 @@
-#Calculator
+# Calculator
+
 A calculator written in C#, supporting expression calculation and simple function.
 
-##How to use
+## How to use
+
 I have made a calculator-like UI. However, the class is written to support Assembly reference.
 
 Use `using Net.AlexKing.Calculator.Core` to import the core classes. For normal expression calculation, use
